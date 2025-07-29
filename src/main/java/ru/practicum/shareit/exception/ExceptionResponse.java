@@ -1,8 +1,14 @@
 package ru.practicum.shareit.exception;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@Getter
+@ToString
 public class ExceptionResponse {
     private final String message;
+
+    public ExceptionResponse(String message) {
+        this.message = message;
+    }
 }
