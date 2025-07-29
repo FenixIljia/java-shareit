@@ -1,13 +1,8 @@
 package ru.practicum.shareit.user.storage;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdate;
-import ru.practicum.shareit.user.mapper.UserMapperDto;
 
 import java.util.ArrayList;
 import java.util.List;

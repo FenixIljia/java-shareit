@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.storage;
 
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdate;
 
 import java.util.List;
