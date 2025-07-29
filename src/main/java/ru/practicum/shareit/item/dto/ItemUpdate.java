@@ -7,12 +7,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ItemDto {
-    private Long id;
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String description;
-    @NotNull
+public class ItemUpdate {
+    private final String name;
+    private final String description;
     private Boolean available;
 }
