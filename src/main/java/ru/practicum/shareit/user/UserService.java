@@ -19,5 +19,5 @@ public interface UserService {
 
     public User update(UserUpdate user, long userId);
 
-    public boolean delete(long id);
+    public void delete(long id);
 }

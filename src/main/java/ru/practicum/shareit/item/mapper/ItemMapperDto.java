@@ -10,7 +10,7 @@ public class ItemMapperDto {
         log.trace("ItemMapperDto.toDto: {}", item.getName());
         return ItemDto
                 .builder()
-                .id(item.getId())
+                .ItemId(item.getItemId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())

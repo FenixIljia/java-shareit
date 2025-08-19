@@ -3,8 +3,7 @@ package ru.practicum.shareit.item;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdate;
+import ru.practicum.shareit.item.dto.*;
 
 import java.util.List;
 
@@ -15,22 +14,21 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader(name = "X-Sharer-User-Id", defaultValue = "-1") long userId) {
-        if (userId == -1) {
-            return itemService.findAll();
-        } else {
-            return itemService.findAll(userId);
-        }
+    public List<ItemViewOwner> getItemsByUser(@RequestHeader(name = "X-Sharer-User-Id") long userId) {
+        return itemService.findAllByUserId(userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable("itemId") long id) {
-        return itemService.findById(id);
+    public ItemViewOwner getItemById(
+            @PathVariable("itemId") long itemId,
+            @RequestHeader(name = "X-Sharer-User-Id") long userId
+    ) {
+        return itemService.findById(itemId, userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> getItemByName(@RequestParam String text) {
-        return itemService.findByName(text);
+    public List<ItemView> getItemByName(@RequestParam String text) {
+        return itemService.findAllByName(text);
     }
 
     @PostMapping
@@ -50,5 +48,12 @@ public class ItemController {
         return itemService.update(itemUpdate, itemId, userId);
     }
 
-
+    @PostMapping("/{itemId}/comment")
+    public CommentView save(
+            @RequestBody SaveComment saveComment,
+            @PathVariable("itemId") long itemId,
+            @RequestHeader("X-Sharer-User-Id") long userId
+    ) {
+        return itemService.save(saveComment, itemId, userId);
+    }
 }
