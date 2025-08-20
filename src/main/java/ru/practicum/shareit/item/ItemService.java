@@ -8,7 +8,7 @@ public interface ItemService {
 
     Item save(ItemDto item, long userId);
 
-    List<ItemViewOwner> findAllByUserId(long user_id);
+    List<ItemViewOwner> findAllByUserId(long useкId);
 
     void delete(long id, long userId);
 

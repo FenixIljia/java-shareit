@@ -34,9 +34,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemViewOwner> findAllByUserId(long user_id) {
-        log.info("Find all items by user with id={}", user_id);
-        List<ItemViewOwner> itemViewOwners = itemRepository.findAllByUserId(user_id);
+    public List<ItemViewOwner> findAllByUserId(long userId) {
+        log.info("Find all items by user with id={}", userId);
+        List<ItemViewOwner> itemViewOwners = itemRepository.findAllByUserId(userId);
         for (ItemViewOwner itemViewOwner : itemViewOwners) {
             addCommentsInListItemView(itemViewOwner);
             addBookingInListItemView(itemViewOwner);
