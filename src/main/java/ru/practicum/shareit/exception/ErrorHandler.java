@@ -27,7 +27,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerException(AccessRightException e) {
         return new ExceptionResponse(e.getMessage());
     }
@@ -35,6 +35,18 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handlerException(ValidationDataException e) {
+        return new ExceptionResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse handlerException(NoAccess e) {
+        return new ExceptionResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handlerException(NotCompletedBooking e) {
         return new ExceptionResponse(e.getMessage());
     }
 }

@@ -30,12 +30,12 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public User patch(@RequestBody UserUpdate user, @PathVariable Long id) {
+    public User update(@RequestBody UserUpdate user, @PathVariable Long id) {
         return userService.update(user, id);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Long id) {
-        return userService.delete(id);
+    public void delete(@PathVariable Long id) {
+        userService.delete(id);
     }
 }

@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdate;
+import ru.practicum.shareit.item.dto.*;
 
 import java.util.List;
 
@@ -9,15 +8,15 @@ public interface ItemService {
 
     Item save(ItemDto item, long userId);
 
-    List<ItemDto> findAll();
+    List<ItemViewOwner> findAllByUserId(long userId);
 
-    List<ItemDto> findAll(long userId);
+    void delete(long id, long userId);
 
-    boolean delete(long id, long userId);
+    List<ItemView> findAllByName(String name);
 
-    List<ItemDto> findByName(String name);
+    ItemViewOwner findById(long id, long userId);
 
-    ItemDto findById(long id);
+    Item update(ItemUpdate newItem, long id, Long userId);
 
-    Item update(ItemUpdate newItem, Long id, Long userId);
+    CommentView save(SaveComment saveComment, long itemId, Long userId);
 }
