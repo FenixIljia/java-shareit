@@ -12,11 +12,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
+
     private Long itemId;
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String description;
+
     @NotNull
     private Boolean available;
+
+    private Long requestId;
 }

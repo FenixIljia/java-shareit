@@ -10,6 +10,7 @@ import ru.practicum.shareit.exception.NotCompletedBooking;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.CommentMapperDto;
+import ru.practicum.shareit.request.ItemRequestsRepository;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
+    private final ItemRequestsRepository itemRequestsRepository;
 
     @Override
     public void delete(long id, long userId) {
@@ -81,6 +83,9 @@ public class ItemServiceImpl implements ItemService {
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
                 .build();
+        if (itemDto.getRequestId() != null) {
+            item.setRequest(itemRequestsRepository.findById(itemDto.getRequestId()).get());
+        }
         return itemRepository.save(item);
     }
 

@@ -34,7 +34,13 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<BookingViewDTO> findAllByUserIdAndBookingStatusOrderByStartDateAsc(Long userId, BookingStatus bookingStatus);
 
-    @Query("SELECT new ru.practicum.shareit.booking.dto.BookingViewDTO(b.bookingId, b.item, b.user, b.startDate, b.endDate, b.bookingStatus) " +
+    @Query("SELECT new ru.practicum.shareit.booking.dto.BookingViewDTO(" +
+            "b.bookingId," +
+            " b.item," +
+            " b.user," +
+            " b.startDate," +
+            " b.endDate," +
+            " b.bookingStatus) " +
             "FROM Booking b WHERE b.user.id = :userId ORDER BY b.startDate ASC")
     List<BookingViewDTO> findAllByUserIdOrderByStartDateAsc(@Param("userId") Long userId);
 

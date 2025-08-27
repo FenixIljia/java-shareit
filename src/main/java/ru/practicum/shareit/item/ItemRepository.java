@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.item.dto.ItemView;
 import ru.practicum.shareit.item.dto.ItemViewOwner;
+import ru.practicum.shareit.request.dto.ResponseViewDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,4 +46,13 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Query("SELECT new ru.practicum.shareit.item.dto.ItemViewOwner(i.itemId, i.user.id, i.name, i.description, i.available)" +
             " FROM Item i WHERE i.itemId = :itemId")
     Optional<ItemViewOwner> findByItemId(@Param("itemId") long itemId);
+
+    @Query("SELECT new ru.practicum.shareit.request.dto.ResponseViewDto(" +
+            "i.user.id, " +
+            "i.itemId, " +
+            "i.name" +
+            ") " +
+            "FROM Item i " +
+            "WHERE i.request.id = :requestId")
+    List<ResponseViewDto> findAllByRequestId(@Param("requestId") Long requestId);
 }

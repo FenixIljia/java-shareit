@@ -1,11 +1,13 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.net.httpserver.Request;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import java.util.Objects;
@@ -40,6 +42,10 @@ public class Item {
     @NotNull
     @Column(nullable = false)
     private Boolean available;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id")
+    private ItemRequest request;
 
     @Override
     public final boolean equals(Object o) {
