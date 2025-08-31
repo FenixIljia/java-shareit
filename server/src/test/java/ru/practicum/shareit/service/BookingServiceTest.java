@@ -39,27 +39,6 @@ public class BookingServiceTest {
     private final BaseServiceTest baseServiceTest;
 
     @Test
-    public void deleteByUserId() {
-        User user = baseServiceTest.saveUser("Test", "Test");
-
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
-
-        BookingSave bookingSave = new BookingSave();
-        bookingSave.setItemId(item.getItemId());
-        bookingSave.setStart(LocalDateTime.now().plusDays(1));
-        bookingSave.setEnd(LocalDateTime.now().plusDays(2));
-
-        Booking bookingAfterSave = bookingService.save(bookingSave, user.getId());
-
-        bookingService.deleteByUserId(bookingAfterSave.getBookingId());
-
-        TypedQuery<Booking> query = em.createQuery("SELECT b FROM Booking b WHERE bookingId = :bookingId", Booking.class);
-        List<Booking> bookingList = query.setParameter("bookingId", bookingAfterSave.getBookingId()).getResultList();
-
-        assertThat(bookingList, empty());
-    }
-
-    @Test
     public void saveBookingTest() {
         Booking booking = saveBooking();
         TypedQuery<Booking> query = em.createQuery("SELECT b FROM Booking as b WHERE b.bookingId = :bookingId", Booking.class);
@@ -146,6 +125,27 @@ public class BookingServiceTest {
                 itemSave1.getUser().getId(),
                 null);
         assertThat(bookingViewDTOList.size(), equalTo(4));
+    }
+
+    @Test
+    public void deleteByUserId() {
+        User user = baseServiceTest.saveUser("Test", "Test");
+
+        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+
+        BookingSave bookingSave = new BookingSave();
+        bookingSave.setItemId(item.getItemId());
+        bookingSave.setStart(LocalDateTime.now().plusDays(1));
+        bookingSave.setEnd(LocalDateTime.now().plusDays(2));
+
+        Booking bookingAfterSave = bookingService.save(bookingSave, user.getId());
+
+        bookingService.deleteByUserId(bookingAfterSave.getBookingId());
+
+        TypedQuery<Booking> query = em.createQuery("SELECT b FROM Booking b WHERE bookingId = :bookingId", Booking.class);
+        List<Booking> bookingList = query.setParameter("bookingId", bookingAfterSave.getBookingId()).getResultList();
+
+        assertThat(bookingList, empty());
     }
 
     private Booking saveBooking() {
