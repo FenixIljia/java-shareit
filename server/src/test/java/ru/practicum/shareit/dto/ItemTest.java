@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ItemTest {
 
     @Test
-    public void ItemConstructorTest() {
+    public void itemConstructorTest() {
         User user = new User();
         user.setEmail("test");
         user.setName("test");
@@ -33,7 +33,7 @@ public class ItemTest {
     }
 
     @Test
-    public void ItemViewOwnerConstructorTest() {
+    public void itemViewOwnerConstructorTest() {
         Long itemId = 1L;
         Long ownerId = 1L;
         String name = "Test";

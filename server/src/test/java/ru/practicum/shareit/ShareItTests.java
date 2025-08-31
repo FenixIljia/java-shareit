@@ -6,11 +6,12 @@ import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@SpringBootTest
+
 @TestPropertySource(properties = {
 		"spring.datasource.url=jdbc:h2:mem:test",
 		"spring.jpa.hibernate.ddl-auto=create-drop"
 })
+@SpringBootTest
 class ShareItAppTest {
 
 	@Test
