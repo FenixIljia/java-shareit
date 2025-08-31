@@ -16,7 +16,6 @@ import ru.practicum.shareit.booking.dto.BookingViewDTO;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserService;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
