@@ -1,10 +1,7 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.net.httpserver.Request;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import ru.practicum.shareit.request.ItemRequest;
@@ -32,14 +29,11 @@ public class Item {
     private User user;
 
     @Column(nullable = false)
-    @NotBlank
     private String name;
 
-    @NotBlank
     @Column(nullable = false)
     private String description;
 
-    @NotNull
     @Column(nullable = false)
     private Boolean available;
 

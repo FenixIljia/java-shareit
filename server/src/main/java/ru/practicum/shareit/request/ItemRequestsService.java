@@ -5,7 +5,7 @@ import ru.practicum.shareit.request.dto.SaveItemRequestDto;
 
 import java.util.List;
 
-interface ItemRequestsService {
+public interface ItemRequestsService {
 
     ItemRequest save(SaveItemRequestDto req);
 

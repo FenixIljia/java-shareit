@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingSave;
-import ru.practicum.shareit.booking.dto.BookingUpdate;
 import ru.practicum.shareit.booking.dto.BookingViewDTO;
 import ru.practicum.shareit.exception.AccessRightException;
 import ru.practicum.shareit.exception.NoAccess;
@@ -63,20 +62,6 @@ public class BookingServiceImpl implements BookingService {
                 .bookingStatus(BookingStatus.WAITING)
                 .build();
         return bookingRepository.save(booking);
-    }
-
-    @Override
-    public void update(BookingUpdate bookingUpdate, Long ownerId) {
-        userRepository.findById(ownerId);
-        Optional<Booking> booking = bookingRepository.findById((int) bookingUpdate.getBookingId());
-        if (booking.isEmpty()) {
-            throw new NotFoundException("Booking with id " + bookingUpdate.getBookingId() + " not found");
-        }
-        if (!booking.get().getUser().getId().equals(ownerId)) {
-            throw new AccessRightException("User with id " + ownerId + " is not the owner of item with id " + booking.get().getItem().getItemId());
-        }
-        booking.get().setBookingStatus(bookingUpdate.getStatus());
-        bookingRepository.save(booking.get());
     }
 
     @Override

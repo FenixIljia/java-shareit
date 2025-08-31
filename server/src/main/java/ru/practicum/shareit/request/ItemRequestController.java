@@ -20,7 +20,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestViewDto findAllByRequestId(@PathVariable Long requestId) {
+    public ItemRequestViewDto findByRequestId(@PathVariable Long requestId) {
         return itemRequestsService.findById(requestId);
     }
 

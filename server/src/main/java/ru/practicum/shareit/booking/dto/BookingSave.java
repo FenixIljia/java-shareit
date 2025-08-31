@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 @Data
 public class BookingSave {
 
-    long itemId;
+    private long itemId;
 
-    LocalDateTime start;
+    private LocalDateTime start;
 
-    LocalDateTime end;
+    private LocalDateTime end;
 }
