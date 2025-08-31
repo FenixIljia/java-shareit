@@ -34,7 +34,7 @@ public class ItemRequestServiceImplTest {
     public void saveTest() {
         User user = baseServiceTest.saveUser("test", "test");
         SaveItemRequestDto req = new SaveItemRequestDto(user.getId(), "Test");
-        ItemRequest itemRequestSave= itemRequestsService.save(req);
+        ItemRequest itemRequestSave = itemRequestsService.save(req);
         TypedQuery<ItemRequest> query = em.createQuery("SELECT i FROM ItemRequest i WHERE userId=:userId", ItemRequest.class);
         ItemRequest itemRequest = query.setParameter("userId", user)
                 .getSingleResult();

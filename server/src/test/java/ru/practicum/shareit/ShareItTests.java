@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class ShareItAppTest {
 
 	@Test
-	void contextLoads() {
+	void mainContextTest() {
 		// Тест проверяет, что контекст Spring успешно загружается
 		assertDoesNotThrow(() -> ShareItApp.main(new String[]{}));
 	}

@@ -2,7 +2,6 @@ package ru.practicum.shareit.dto;
 
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.booking.BookingStatus;
-import ru.practicum.shareit.booking.dto.BookingSave;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.dto.ItemViewOwner;
 import ru.practicum.shareit.request.ItemRequest;
@@ -10,14 +9,13 @@ import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ItemTest {
 
     @Test
-    public void ItemTest() {
+    public void ItemConstructorTest() {
         User user = new User();
         user.setEmail("test");
         user.setName("test");
@@ -35,7 +33,7 @@ public class ItemTest {
     }
 
     @Test
-    public void ItemViewOwnerTest() {
+    public void ItemViewOwnerConstructorTest() {
         Long itemId = 1L;
         Long ownerId = 1L;
         String name = "Test";
@@ -44,13 +42,13 @@ public class ItemTest {
         Long lastBookingId = 1L;
         LocalDateTime lastBookingStart = LocalDateTime.now().minusDays(2);
         LocalDateTime lastBookingEnd = LocalDateTime.now().minusDays(1);
-        BookingStatus lastBookingStatus =BookingStatus.APPROVED;
+        BookingStatus lastBookingStatus = BookingStatus.APPROVED;
         Long lastBookerId = 1L;
         String lastBookerName = "Test";
         Long nextBookingId = 1L;
         LocalDateTime nextBookingStart = LocalDateTime.now().plusDays(2);
         LocalDateTime nextBookingEnd = LocalDateTime.now().plusDays(3);
-        BookingStatus nextBookingStatus =BookingStatus.APPROVED;
+        BookingStatus nextBookingStatus = BookingStatus.APPROVED;
         Long nextBookerId = 1L;
         String nextBookerName = "Test";
         ItemViewOwner itemViewOwner = new ItemViewOwner(
