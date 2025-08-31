@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -19,6 +20,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -79,6 +81,21 @@ public class UserServiceImplTest {
         List<UserDto> userDtoList = userService.findByName("test");
         assertThat(userDtoList, notNullValue());
         assertThat(userDtoList.size(), equalTo(4));
+    }
+
+    @Test
+    public void findByNameWithInvalidNameTest() {
+        User user1 = baseServiceTest.createUser("test1", "test1");
+        User user2 = baseServiceTest.createUser("test2", "test2");
+        User user3 = baseServiceTest.createUser("test3", "test3");
+        User user4 = baseServiceTest.createUser("test4", "test4");
+        userService.save(user1);
+        userService.save(user2);
+        userService.save(user3);
+        userService.save(user4);
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.findByName("Jhon"));
+        assertThat(exception, notNullValue());
+        assertThat(exception.getMessage(), equalTo("User with name Jhon not found"));
     }
 
     @Test

@@ -24,6 +24,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 
 @Transactional
 @ActiveProfiles("test")
@@ -36,6 +37,27 @@ public class BookingServiceTest {
     private final BookingService bookingService;
     private final ItemService itemService;
     private final BaseServiceTest baseServiceTest;
+
+    @Test
+    public void deleteByUserId() {
+        User user = baseServiceTest.saveUser("Test", "Test");
+
+        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+
+        BookingSave bookingSave = new BookingSave();
+        bookingSave.setItemId(item.getItemId());
+        bookingSave.setStart(LocalDateTime.now().plusDays(1));
+        bookingSave.setEnd(LocalDateTime.now().plusDays(2));
+
+        Booking bookingAfterSave = bookingService.save(bookingSave, user.getId());
+
+        bookingService.deleteByUserId(bookingAfterSave.getBookingId());
+
+        TypedQuery<Booking> query = em.createQuery("SELECT b FROM Booking b WHERE bookingId = :bookingId", Booking.class);
+        List<Booking> bookingList = query.setParameter("bookingId", bookingAfterSave.getBookingId()).getResultList();
+
+        assertThat(bookingList, empty());
+    }
 
     @Test
     public void saveBookingTest() {

@@ -59,9 +59,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findByName(String name) {
         log.info("UserServiceImpl.findByName");
-        Optional<List<User>> users = userRepository.findByName(name);
-        if (users.isPresent()) {
-            return users.get()
+        List<User> users = userRepository.findByName(name);
+        if (!users.isEmpty()) {
+            return users
                     .stream()
                     .map(UserMapperDto::toDto)
                     .collect(Collectors.toList());
@@ -96,12 +96,4 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.save(user.get());
     }
-
-/*    private void checkDuplicationEmail(String email) {
-        log.info("UserServiceImpl.checkDuplication {}", email);
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            throw new DuplicatedDataException("User with email " + email + " already exists");
-        }
-    }*/
 }

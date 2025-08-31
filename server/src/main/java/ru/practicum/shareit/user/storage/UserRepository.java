@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     public Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
-    public Optional<List<User>> findByName(@Param("name") String name);
+    public List<User> findByName(@Param("name") String name);
 }
