@@ -38,6 +38,7 @@ public class ItemViewOwner {
 
     public ItemViewOwner(
             Long itemId,
+            Long ownerId,
             String name,
             String description,
             Boolean available,
@@ -55,6 +56,7 @@ public class ItemViewOwner {
             String nextBookerName
     ) {
         this.itemId = itemId;
+        this.ownerId = ownerId;
         this.name = name;
         this.description = description;
         this.available = available;
@@ -81,27 +83,5 @@ public class ItemViewOwner {
             nextBooker.setName(nextBookerName);
             this.nextBooking.setUser(nextBooker);
         }
-    }
-
-    private BookingViewDTO createBookingDTO(
-            Long bookingId, LocalDateTime startDate, LocalDateTime endDate,
-            BookingStatus status, Long bookerId, String bookerName, Long itemId
-    ) {
-        BookingViewDTO booking = new BookingViewDTO();
-        booking.setBookingId(bookingId);
-        booking.setStartDate(startDate);
-        booking.setEndDate(endDate);
-        booking.setBookingStatus(status);
-
-        User booker = new User();
-        booker.setId(bookerId);
-        booker.setName(bookerName);
-        booking.setUser(booker);
-
-        Item item = new Item();
-        item.setItemId(itemId);
-        booking.setItem(item);
-
-        return booking;
     }
 }

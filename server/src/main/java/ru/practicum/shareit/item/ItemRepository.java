@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Query("SELECT new ru.practicum.shareit.item.dto.ItemViewOwner(" +
-            "i.itemId, i.name, i.description, i.available, " +
+            "i.itemId, i.user.id, i.name, i.description, i.available, " +
             "lastBooking.bookingId, lastBooking.startDate, lastBooking.endDate, lastBooking.bookingStatus, " +
             "lastBooker.id, lastBooker.name, " +
             "nextBooking.bookingId, nextBooking.startDate, nextBooking.endDate, nextBooking.bookingStatus, " +

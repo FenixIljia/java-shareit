@@ -34,12 +34,15 @@ public class ItemRequestServiceImplTest {
     public void saveTest() {
         User user = baseServiceTest.saveUser("test", "test");
         SaveItemRequestDto req = new SaveItemRequestDto(user.getId(), "Test");
-        itemRequestsService.save(req);
+        ItemRequest itemRequestSave= itemRequestsService.save(req);
         TypedQuery<ItemRequest> query = em.createQuery("SELECT i FROM ItemRequest i WHERE userId=:userId", ItemRequest.class);
         ItemRequest itemRequest = query.setParameter("userId", user)
                 .getSingleResult();
         assertThat(itemRequest, notNullValue());
-        assertThat(itemRequest.getDescription(), equalTo(req.getDescription()));
+        assertThat(itemRequest.getDescription(), equalTo(itemRequestSave.getDescription()));
+        assertThat(itemRequest.getId(), equalTo(itemRequestSave.getId()));
+        assertThat(itemRequest.getUserId(), equalTo(itemRequestSave.getUserId()));
+        assertThat(itemRequest.getCreateDate(), equalTo(itemRequestSave.getCreateDate()));
     }
 
     @Test
@@ -81,6 +84,9 @@ public class ItemRequestServiceImplTest {
         ItemRequest itemRequest = itemRequestsService.save(req1);
         ItemRequestViewDto itemRequestViewDto = itemRequestsService.findById(itemRequest.getId());
         assertThat(itemRequestViewDto, notNullValue());
-        assertThat(itemRequestViewDto.getDescription(), equalTo(req1.getDescription()));
+        assertThat(itemRequestViewDto.getDescription(), equalTo(itemRequest.getDescription()));
+        assertThat(itemRequest.getId(), equalTo(itemRequest.getId()));
+        assertThat(itemRequest.getUserId(), equalTo(itemRequest.getUserId()));
+        assertThat(itemRequest.getCreateDate(), equalTo(itemRequest.getCreateDate()));
     }
 }
