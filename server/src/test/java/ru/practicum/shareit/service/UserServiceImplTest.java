@@ -32,14 +32,14 @@ public class UserServiceImplTest {
 
     private final UserService userService;
     private final EntityManager em;
-    private final BaseServiceTest baseServiceTest;
+    private final BaseServiceTest baseServiceTest = new BaseServiceTest();
 
     @Test
     public void findAllTest() {
-        User user1 = baseServiceTest.createUser("test", "test");
-        User user2 = baseServiceTest.createUser("test2", "test2");
-        User user3 = baseServiceTest.createUser("test3", "test3");
-        User user4 = baseServiceTest.createUser("test4", "test4");
+        User user1 = baseServiceTest.createUser("test", "test@mail.ru");
+        User user2 = baseServiceTest.createUser("test2", "test2@mail.ru");
+        User user3 = baseServiceTest.createUser("test3", "test3@mail.ru");
+        User user4 = baseServiceTest.createUser("test4", "test4@mail.ru");
         userService.save(user1);
         userService.save(user2);
         userService.save(user3);
@@ -50,7 +50,7 @@ public class UserServiceImplTest {
 
     @Test
     public void findByIdTest() {
-        User user = baseServiceTest.createUser("test", "test");
+        User user = baseServiceTest.createUser("test", "test@mail.ru");
         userService.save(user);
         UserDto userDto = userService.findById(user.getId());
         assertThat(userDto, notNullValue());
@@ -61,7 +61,7 @@ public class UserServiceImplTest {
 
     @Test
     public void findByEmailTest() {
-        User user = baseServiceTest.createUser("test", "test");
+        User user = baseServiceTest.createUser("test", "test@mail.ru");
         userService.save(user);
         UserDto userDto = userService.findByEmail(user.getEmail());
         assertThat(userDto, notNullValue());
@@ -72,10 +72,10 @@ public class UserServiceImplTest {
 
     @Test
     public void findByNameTest() {
-        User user1 = baseServiceTest.createUser("test1", "test1");
-        User user2 = baseServiceTest.createUser("test2", "test2");
-        User user3 = baseServiceTest.createUser("test3", "test3");
-        User user4 = baseServiceTest.createUser("test4", "test4");
+        User user1 = baseServiceTest.createUser("test1", "test1@mail.ru");
+        User user2 = baseServiceTest.createUser("test2", "test2@mail.ru");
+        User user3 = baseServiceTest.createUser("test3", "test3@mail.ru");
+        User user4 = baseServiceTest.createUser("test4", "test4@mail.ru");
         userService.save(user1);
         userService.save(user2);
         userService.save(user3);
@@ -87,10 +87,10 @@ public class UserServiceImplTest {
 
     @Test
     public void findByNameWithInvalidNameTest() {
-        User user1 = baseServiceTest.createUser("test1", "test1");
-        User user2 = baseServiceTest.createUser("test2", "test2");
-        User user3 = baseServiceTest.createUser("test3", "test3");
-        User user4 = baseServiceTest.createUser("test4", "test4");
+        User user1 = baseServiceTest.createUser("test1", "test1@mail.ru");
+        User user2 = baseServiceTest.createUser("test2", "test2@mail.ru");
+        User user3 = baseServiceTest.createUser("test3", "test3@mail.ru");
+        User user4 = baseServiceTest.createUser("test4", "test4@mail.ru");
         userService.save(user1);
         userService.save(user2);
         userService.save(user3);
@@ -102,7 +102,7 @@ public class UserServiceImplTest {
 
     @Test
     public void saveUserTest() {
-        User user = baseServiceTest.createUser("test", "test");
+        User user = baseServiceTest.createUser("test", "test@mail.ru");
         userService.save(user);
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE id = :userId", User.class);
         User item = query.setParameter("userId", user.getId()).getSingleResult();
@@ -113,9 +113,9 @@ public class UserServiceImplTest {
 
     @Test
     public void updateUserTest() {
-        User user = baseServiceTest.createUser("test", "test");
+        User user = baseServiceTest.createUser("test", "test@mail.ru");
         userService.save(user);
-        UserUpdate newUser = new UserUpdate("test2", "test2");
+        UserUpdate newUser = new UserUpdate("test2", "test2@mail.ru");
         userService.update(newUser, user.getId());
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE id = :userId", User.class);
         User item = query.setParameter("userId", user.getId()).getSingleResult();
@@ -126,7 +126,7 @@ public class UserServiceImplTest {
 
     @Test
     public void deleteUserTest() {
-        User user = baseServiceTest.createUser("test", "test");
+        User user = baseServiceTest.createUser("test", "test@mail.ru");
         userService.save(user);
         userService.delete(user.getId());
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE id = :userId", User.class);

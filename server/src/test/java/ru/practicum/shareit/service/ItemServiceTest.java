@@ -22,6 +22,7 @@ import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestsService;
 import ru.practicum.shareit.request.dto.SaveItemRequestDto;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -42,14 +43,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ItemServiceTest {
 
     private final ItemService itemService;
-    private final BaseServiceTest baseServiceTest;
+    private final BaseServiceTest baseServiceTest = new BaseServiceTest();
     private final EntityManager em;
     private final BookingService bookingService;
     private final ItemRequestsService itemRequestsService;
+    @Autowired
+    private UserService userService;
 
     @Test
     public void saveItemTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         ItemDto itemDto = baseServiceTest.createItemDto("Test", "Test", true);
         Item item = itemService.save(itemDto, user.getId());
         assertThat(item, notNullValue());
@@ -57,7 +60,7 @@ public class ItemServiceTest {
 
     @Test
     public void saveItemWithInvalidUserIdTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         ItemDto itemDto = baseServiceTest.createItemDto("Test", "Test", true);
         long invalidUserId = user.getId() + 1;
         NotFoundException exception = assertThrows(NotFoundException.class, () -> itemService.save(itemDto, invalidUserId));
@@ -67,9 +70,9 @@ public class ItemServiceTest {
 
     @Test
     public void saveItemWithRequestTest() {
-        User user1 = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user1 = userService.save(baseServiceTest.createUser("test1", "test1@mail.ru"));
         ItemDto itemDto = baseServiceTest.createItemDto("Test", "Test", true);
-        User user2 = baseServiceTest.saveUser("test2@mail.ru", "Test2");
+        User user2 = userService.save(baseServiceTest.createUser("test2", "test2@mail.ru"));
         SaveItemRequestDto itemRequest = new SaveItemRequestDto(user2.getId(), "test");
         ItemRequest itemRequestAfterSave = itemRequestsService.save(itemRequest);
         itemDto.setRequestId(itemRequestAfterSave.getId());
@@ -88,9 +91,9 @@ public class ItemServiceTest {
     @Test
     public void saveItemWithBookingTest() {
 
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user = userService.save(baseServiceTest.createUser("test1", "test1@mail.ru"));
 
-        User userBooker = baseServiceTest.saveUser("test2@mail.ru", "Test2");
+        User userBooker = userService.save(baseServiceTest.createUser("test2", "test2@mail.ru"));
 
         ItemDto itemDto = baseServiceTest.createItemDto("Test", "Test", true);
 
@@ -150,8 +153,8 @@ public class ItemServiceTest {
 
     @Test
     public void deleteItemTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         itemService.delete(item.getItemId(), user.getId());
         TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE i.id = :id", Item.class);
         List<Item> items = query.setParameter("id", item.getItemId()).getResultList();
@@ -160,7 +163,7 @@ public class ItemServiceTest {
 
     @Test
     public void findAllByUserIdTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         ItemDto itemDto1 = baseServiceTest.createItemDto("Test1", "Test", true);
         ItemDto itemDto2 = baseServiceTest.createItemDto("Test2", "Test", true);
         ItemDto itemDto3 = baseServiceTest.createItemDto("Test3", "Test", true);
@@ -175,8 +178,8 @@ public class ItemServiceTest {
 
     @Test
     public void findByIdTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         ItemViewOwner itemViewOwner = itemService.findById(item.getItemId(), user.getId());
         assertThat(itemViewOwner, notNullValue());
         assertThat(itemViewOwner.getItemId(), equalTo(item.getItemId()));
@@ -191,8 +194,8 @@ public class ItemServiceTest {
 
     @Test
     public void findByIdWithInvalidIdTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         long invalidId = item.getItemId() + 1;
         NotFoundException exception = assertThrows(NotFoundException.class, () -> itemService.findById(invalidId, user.getId()));
         assertThat(exception, notNullValue());
@@ -201,7 +204,7 @@ public class ItemServiceTest {
 
     @Test
     public void findAllByNameTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         ItemDto itemDto1 = baseServiceTest.createItemDto("Test", "null", true);
         ItemDto itemDto2 = baseServiceTest.createItemDto("Test in", "null", true);
         ItemDto itemDto3 = baseServiceTest.createItemDto("in Test", "null", true);
@@ -220,7 +223,7 @@ public class ItemServiceTest {
 
     @Test
     public void findAllByNameWithInvalidNameTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         ItemDto itemDto = baseServiceTest.createItemDto("Test", "null", true);
         itemService.save(itemDto, user.getId());
         List<ItemView> itemViewOwnerList = itemService.findAllByName("");
@@ -229,8 +232,8 @@ public class ItemServiceTest {
 
     @Test
     public void updateItemTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         ItemUpdate itemUpdate = new ItemUpdate();
         itemUpdate.setName("Updated Name");
         itemUpdate.setDescription("Updated Description");
@@ -245,8 +248,8 @@ public class ItemServiceTest {
 
     @Test
     public void updateItemWithInvalidUserIdTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         ItemUpdate itemUpdate = new ItemUpdate();
         itemUpdate.setName("Updated Name");
         itemUpdate.setDescription("Updated Description");
@@ -261,8 +264,8 @@ public class ItemServiceTest {
 
     @Test
     public void updateItemWithInvalidItemIdTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         ItemUpdate itemUpdate = new ItemUpdate();
         itemUpdate.setName("Updated Name");
         itemUpdate.setDescription("Updated Description");
@@ -275,8 +278,8 @@ public class ItemServiceTest {
 
     @Test
     public void updateItemWithNullFieldsTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         ItemUpdate itemUpdate = new ItemUpdate();
         itemService.update(itemUpdate, item.getItemId(), user.getId());
         TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE i.id = :id", Item.class);
@@ -289,8 +292,8 @@ public class ItemServiceTest {
 
     @Test
     public void commentSaveTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         BookingSave bookingSave = baseServiceTest.createBookingSave(
                 item,
                 LocalDateTime.of(2000, 10, 1, 1, 1),
@@ -307,8 +310,8 @@ public class ItemServiceTest {
 
     @Test
     public void commentSaveWithInvalidRentedTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         SaveComment saveComment = new SaveComment("Test with item.id + " + item.getItemId());
         AccessRightException exception = assertThrows(AccessRightException.class, () -> itemService.save(saveComment, item.getItemId(), user.getId()));
         assertThat(exception, notNullValue());
@@ -317,8 +320,8 @@ public class ItemServiceTest {
 
     @Test
     public void commentSaveWithInvalidRentedFutureTest() {
-        User user = baseServiceTest.saveUser("test@mail.ru", "Test");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         LocalDateTime now = LocalDateTime.now();
         BookingSave bookingSave = baseServiceTest.createBookingSave(
                 item,

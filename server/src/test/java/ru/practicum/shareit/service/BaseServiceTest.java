@@ -1,45 +1,13 @@
 package ru.practicum.shareit.service;
 
-import jakarta.transaction.Transactional;
-import lombok.Data;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import ru.practicum.shareit.booking.dto.BookingSave;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
 
-@Transactional
-@ActiveProfiles("test")
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.NONE
-)
-@Data
-@Service
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BaseServiceTest {
-
-    private final ItemService itemService;
-    private final UserService userService;
-
-    public User saveUser(String email, String name) {
-        User user = createUser(name, email);
-        return userService.save(user);
-    }
-
-    public Item saveItem(User user, String itemName, String description, Boolean available) {
-        return itemService.save(createItemDto(itemName, description, available), user.getId());
-    }
 
     public BookingSave createBookingSave(Item item, LocalDateTime start, LocalDateTime end) {
         BookingSave bookingSave = new BookingSave();

@@ -1,9 +1,12 @@
 package ru.practicum.shareit.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +21,7 @@ import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +42,28 @@ public class BookingServiceTest {
     private final EntityManager em;
     private final BookingService bookingService;
     private final ItemService itemService;
-    private final BaseServiceTest baseServiceTest;
+    private final BaseServiceTest baseServiceTest = new BaseServiceTest();
+    @Autowired
+    private UserService userService;
+
+    @BeforeEach
+    @AfterEach
+    public void cleanDatabase() {
+        // Очистка в правильном порядке (из-за foreign key constraints)
+        em.createNativeQuery("DELETE FROM bookings").executeUpdate();
+        em.createNativeQuery("DELETE FROM comments").executeUpdate();
+        em.createNativeQuery("DELETE FROM items").executeUpdate();
+        em.createNativeQuery("DELETE FROM requests").executeUpdate();
+        em.createNativeQuery("DELETE FROM users").executeUpdate();
+
+        // Сброс последовательностей для H2
+        em.createNativeQuery("ALTER TABLE users ALTER COLUMN user_id RESTART WITH 1").executeUpdate();
+        em.createNativeQuery("ALTER TABLE items ALTER COLUMN item_id RESTART WITH 1").executeUpdate();
+        em.createNativeQuery("ALTER TABLE bookings ALTER COLUMN booking_id RESTART WITH 1").executeUpdate();
+
+        em.flush();
+        em.clear();
+    }
 
     @Test
     public void saveBookingTest() {
@@ -131,9 +156,9 @@ public class BookingServiceTest {
 
     @Test
     public void deleteByUserId() {
-        User user = baseServiceTest.saveUser("Test", "Test");
+        User user = userService.save(baseServiceTest.createUser("Test", "test@mail.ru"));
 
-        Item item = baseServiceTest.saveItem(user, "Test", "Test", true);
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
 
         BookingSave bookingSave = new BookingSave();
         bookingSave.setItemId(item.getItemId());
@@ -142,17 +167,25 @@ public class BookingServiceTest {
 
         Booking bookingAfterSave = bookingService.save(bookingSave, user.getId());
 
+        // Явный flush перед удалением
+        em.flush();
+
         bookingService.deleteByUserId(bookingAfterSave.getBookingId());
 
-        TypedQuery<Booking> query = em.createQuery("SELECT b FROM Booking b WHERE bookingId = :bookingId", Booking.class);
-        List<Booking> bookingList = query.setParameter("bookingId", bookingAfterSave.getBookingId()).getResultList();
+        // Явный flush после удаления
+        em.flush();
+        em.clear(); // Очищаем кэш Hibernate
+
+        Query query = em.createQuery("SELECT b FROM Booking b WHERE b.bookingId = :bookingId", Booking.class);
+        query.setParameter("bookingId", bookingAfterSave.getBookingId());
+        List<Booking> bookingList = query.getResultList();
 
         assertThat(bookingList, empty());
     }
 
     private Booking saveBooking() {
-        User user = baseServiceTest.saveUser("admin", "admin");
-        Item item = baseServiceTest.saveItem(user, "Test", "Test bookingServiceSave", true);
+        User user = userService.save(baseServiceTest.createUser("admin", "test@mail.ru"));
+        Item item = itemService.save(baseServiceTest.createItemDto("Test", "Test", true), user.getId());
         BookingSave bookingSave = baseServiceTest.createBookingSave(
                 item,
                 LocalDateTime.of(2000, 10, 2, 2, 2),

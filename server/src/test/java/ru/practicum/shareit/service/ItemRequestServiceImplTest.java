@@ -14,6 +14,7 @@ import ru.practicum.shareit.request.ItemRequestsService;
 import ru.practicum.shareit.request.dto.ItemRequestViewDto;
 import ru.practicum.shareit.request.dto.SaveItemRequestDto;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserService;
 
 import java.util.List;
 
@@ -29,12 +30,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ItemRequestServiceImplTest {
 
     private final ItemRequestsService itemRequestsService;
-    private final BaseServiceTest baseServiceTest;
+    private final BaseServiceTest baseServiceTest = new BaseServiceTest();
     private final EntityManager em;
+    @Autowired
+    private UserService userService;
 
     @Test
     public void saveTest() {
-        User user = baseServiceTest.saveUser("test", "test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         SaveItemRequestDto req = new SaveItemRequestDto(user.getId(), "Test");
         ItemRequest itemRequestSave = itemRequestsService.save(req);
         TypedQuery<ItemRequest> query = em.createQuery("SELECT i FROM ItemRequest i WHERE userId=:userId", ItemRequest.class);
@@ -49,7 +52,7 @@ public class ItemRequestServiceImplTest {
 
     @Test
     public void findAllByUserIdTest() {
-        User user = baseServiceTest.saveUser("test", "test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         SaveItemRequestDto req1 = new SaveItemRequestDto(user.getId(), "Test1");
         SaveItemRequestDto req2 = new SaveItemRequestDto(user.getId(), "Test2");
         SaveItemRequestDto req3 = new SaveItemRequestDto(user.getId(), "Test3");
@@ -65,7 +68,7 @@ public class ItemRequestServiceImplTest {
 
     @Test
     public void findAllTest() {
-        User user = baseServiceTest.saveUser("test", "test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         SaveItemRequestDto req1 = new SaveItemRequestDto(user.getId(), "Test1");
         SaveItemRequestDto req2 = new SaveItemRequestDto(user.getId(), "Test2");
         SaveItemRequestDto req3 = new SaveItemRequestDto(user.getId(), "Test3");
@@ -81,7 +84,7 @@ public class ItemRequestServiceImplTest {
 
     @Test
     public void findByIdTest() {
-        User user = baseServiceTest.saveUser("test", "test");
+        User user = userService.save(baseServiceTest.createUser("test", "test@mail.ru"));
         SaveItemRequestDto req1 = new SaveItemRequestDto(user.getId(), "Test1");
         ItemRequest itemRequest = itemRequestsService.save(req1);
         ItemRequestViewDto itemRequestViewDto = itemRequestsService.findById(itemRequest.getId());
