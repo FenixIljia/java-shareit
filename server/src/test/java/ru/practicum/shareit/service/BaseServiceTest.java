@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 )
 @Data
 @Service
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BaseServiceTest {
 
     private final ItemService itemService;
