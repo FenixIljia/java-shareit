@@ -2,6 +2,8 @@ package ru.practicum.shareit.service;
 
 import jakarta.transaction.Transactional;
 import lombok.Data;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,6 +25,8 @@ import java.time.LocalDateTime;
 @Data
 @Service
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DataJdbcTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BaseServiceTest {
 
     private final ItemService itemService;
