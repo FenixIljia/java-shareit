@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import ru.practicum.shareit.booking.dto.BookingSave;
 import ru.practicum.shareit.item.Item;
