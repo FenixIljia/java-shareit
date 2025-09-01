@@ -6,9 +6,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - server
+      - shareit-server
     environment:
-      - SHAREIT_SERVER_URL=http://sharer-server:9090
+      - SHAREIT_SERVER_URL=http://shareit-server:9090
 
   server:
     build: server
