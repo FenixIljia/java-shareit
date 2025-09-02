@@ -3,6 +3,7 @@ package ru.practicum.shareit.request;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.constant.HttpHeaders;
 import ru.practicum.shareit.request.dto.SaveItemRequestDto;
 
 @RestController
@@ -23,14 +24,14 @@ public class RequestController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAllByUserId(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> findAllByUserId(@RequestHeader(HttpHeaders.USER_ID_HEADER) long userId) {
         return requestClient.findAllByUserId(userId);
     }
 
     @PostMapping
     public ResponseEntity<Object> save(
             @RequestBody SaveItemRequestDto saveItemRequestDto,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return requestClient.save(saveItemRequestDto, userId);
     }

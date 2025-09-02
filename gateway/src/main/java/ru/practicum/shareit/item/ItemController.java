@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.constant.HttpHeaders;
 import ru.practicum.shareit.item.dto.ItemSaveDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.dto.SaveComment;
@@ -16,14 +17,14 @@ public class ItemController {
     private final ItemClient itemClient;
 
     @GetMapping
-    public ResponseEntity<Object> getItemsByUserId(@RequestHeader(name = "X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> getItemsByUserId(@RequestHeader(name = HttpHeaders.USER_ID_HEADER) long userId) {
         return itemClient.findAllByUserId(userId);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItemById(
             @PathVariable long itemId,
-            @RequestHeader(name = "X-Sharer-User-Id") long userId
+            @RequestHeader(name = HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemClient.findItemById(itemId, userId);
     }
@@ -36,7 +37,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Object> save(
             @Valid @RequestBody ItemSaveDto itemSaveDto,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemClient.save(itemSaveDto, userId);
     }
@@ -45,7 +46,7 @@ public class ItemController {
     public ResponseEntity<Object> update(
             @PathVariable long itemId,
             @RequestBody ItemUpdateDto itemUpdateDto,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemClient.update(itemId, itemUpdateDto, userId);
     }
@@ -54,7 +55,7 @@ public class ItemController {
     public ResponseEntity<Object> save(
             @RequestBody SaveComment saveComment,
             @PathVariable long itemId,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemClient.save(saveComment, itemId, userId);
     }

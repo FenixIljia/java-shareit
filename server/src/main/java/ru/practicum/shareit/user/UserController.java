@@ -11,6 +11,7 @@ import java.util.List;
 @RequestMapping(path = "/users")
 @AllArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     @GetMapping

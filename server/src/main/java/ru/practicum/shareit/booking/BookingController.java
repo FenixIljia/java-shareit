@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingSave;
 import ru.practicum.shareit.booking.dto.BookingViewDTO;
+import ru.practicum.shareit.constant.HttpHeaders;
 
 import java.util.List;
 
@@ -11,12 +12,13 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 @AllArgsConstructor
 public class BookingController {
+
     private BookingService bookingService;
 
     @PostMapping
     public Booking create(
             @RequestBody BookingSave bookingSave,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return bookingService.save(bookingSave, userId);
     }
@@ -25,7 +27,7 @@ public class BookingController {
     public Booking bookingConfirmationOrRejection(
             @PathVariable long bookingId,
             @RequestParam Boolean approved,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return bookingService.bookingConfirmationOrRejection(bookingId, approved, userId);
     }
@@ -33,14 +35,14 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public BookingViewDTO findByBookingId(
             @PathVariable Long bookingId,
-            @RequestHeader("X-Sharer-User-Id") Long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) Long userId
     ) {
         return bookingService.findOne(bookingId, userId);
     }
 
     @GetMapping
     public List<BookingViewDTO> findAllByUserId(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) Long userId,
             @RequestParam(required = false) BookingStatus status
     ) {
         return bookingService.findAllByUserId(userId, status);
@@ -48,7 +50,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingViewDTO> findAllByOwnerId(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) Long userId,
             @RequestParam(required = false) BookingStatus status
     ) {
         return bookingService.findAllByOwnerId(userId, status);

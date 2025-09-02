@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.constant.HttpHeaders;
 import ru.practicum.shareit.item.dto.*;
 
 import java.util.List;
@@ -10,17 +11,18 @@ import java.util.List;
 @RequestMapping("/items")
 @AllArgsConstructor
 public class ItemController {
+
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemViewOwner> getItemsByUser(@RequestHeader(name = "X-Sharer-User-Id") long userId) {
+    public List<ItemViewOwner> getItemsByUser(@RequestHeader(name = HttpHeaders.USER_ID_HEADER) long userId) {
         return itemService.findAllByUserId(userId);
     }
 
     @GetMapping("/{itemId}")
     public ItemViewOwner getItemById(
             @PathVariable("itemId") long itemId,
-            @RequestHeader(name = "X-Sharer-User-Id") long userId
+            @RequestHeader(name = HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemService.findById(itemId, userId);
     }
@@ -33,7 +35,7 @@ public class ItemController {
     @PostMapping
     public Item create(
             @RequestBody ItemDto itemDto,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemService.save(itemDto, userId);
     }
@@ -42,7 +44,7 @@ public class ItemController {
     public Item update(
             @PathVariable long itemId,
             @RequestBody ItemUpdate itemUpdate,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemService.update(itemUpdate, itemId, userId);
     }
@@ -51,7 +53,7 @@ public class ItemController {
     public CommentView save(
             @RequestBody SaveComment saveComment,
             @PathVariable("itemId") long itemId,
-            @RequestHeader("X-Sharer-User-Id") long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) long userId
     ) {
         return itemService.save(saveComment, itemId, userId);
     }

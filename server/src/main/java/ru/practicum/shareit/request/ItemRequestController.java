@@ -2,6 +2,7 @@ package ru.practicum.shareit.request;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.constant.HttpHeaders;
 import ru.practicum.shareit.request.dto.ItemRequestViewDto;
 import ru.practicum.shareit.request.dto.SaveItemRequestDto;
 
@@ -25,14 +26,14 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public List<ItemRequestViewDto> findAllByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemRequestViewDto> findAllByUserId(@RequestHeader(HttpHeaders.USER_ID_HEADER) Long userId) {
         return itemRequestsService.findAllByUserId(userId);
     }
 
     @PostMapping
     public ItemRequest save(
             @RequestBody SaveItemRequestDto saveItemRequestDto,
-            @RequestHeader("X-Sharer-User-Id") Long userId
+            @RequestHeader(HttpHeaders.USER_ID_HEADER) Long userId
     ) {
         saveItemRequestDto.setUserId(userId);
         return itemRequestsService.save(saveItemRequestDto);
